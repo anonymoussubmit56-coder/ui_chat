@@ -1,3 +1,4 @@
+
 const Sidebar = ({ toggleTheme, theme, setAddTau }) => {
   const getRequest = async () => {
     try {
@@ -11,11 +12,11 @@ const Sidebar = ({ toggleTheme, theme, setAddTau }) => {
 
   return (
     <aside
-      className={`vh-100 position-fixed top-0 start-0 d-none d-md-block ${theme === "light" ? "bg-secondary-subtle text-dark" : "bg-black text-light"}`}
+      className={`vh-100 position-fixed top-0 start-0 ${theme === "light" ? "bg-secondary-subtle text-dark" : "bg-black text-light"}`}
       style={{ width: "16rem" }}
     >
       <div className="p-4 fs-5 fw-bold border-bottom border-secondary">
-        Mi App
+        <img src={`/img/${theme === "light" ? "black" : "light"}-logo.png`} className="card-img-top" alt="logo" />
       </div>
 
       <nav className="mt-3">
