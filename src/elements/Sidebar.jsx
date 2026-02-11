@@ -1,5 +1,4 @@
-
-const Sidebar = ({ toggleTheme, theme, setAddTau }) => {
+const Sidebar = ({ toggleTheme, theme, setAddTau, isOpen, setIsOpen }) => {
   const getRequest = async () => {
     try {
       const response = await fetch("http://127.0.0.1:8000/");
@@ -12,30 +11,65 @@ const Sidebar = ({ toggleTheme, theme, setAddTau }) => {
 
   return (
     <aside
-      className={`vh-100 position-fixed top-0 start-0 ${theme === "light" ? "bg-secondary-subtle text-dark" : "bg-black text-light"}`}
-      style={{ width: "16rem" }}
+      className={`vh-100 position-relative flex-shrink-0
+        ${theme === "light" ? "bg-secondary-subtle text-dark" : "bg-black text-light"}`}
+      style={{
+        width: isOpen ? "16rem" : "4rem",
+        transition: "width 0.3s ease",
+        overflow: "hidden",
+      }}
     >
+      <button
+        type="button"
+        className="navbar-toggler position-absolute top-0 end-0 m-2"
+        onClick={() => setIsOpen(!isOpen)}
+        style={{ zIndex: 1050 }}
+      >
+        Menu{" "}
+        <span className="navbar-toggler-icon">
+          <img
+            src="/img/menu-icon.png"
+            alt="Menu icon"
+            className="w-100 h-100"
+          />
+        </span>
+      </button>
+
       <div className="p-4 fs-5 fw-bold border-bottom border-secondary">
-        <img src={`/img/${theme === "light" ? "black" : "light"}-logo.png`} className="card-img-top" alt="logo" />
+        <img
+          src={`/img/${theme === "light" ? "black" : "light"}-logo.png`}
+          className="card-img-top"
+          alt="logo"
+        />
       </div>
 
-      <nav className="mt-3">
-        <ul className="list-unstyled px-2">
-          <li
-            onClick={getRequest}
-            className="px-3 py-2 rounded sidebar-item"
-            role="button"
-          >
-            Test Connection
-          </li>
-          <li className="px-3 py-2 rounded sidebar-item" role="button" onClick={toggleTheme}>
-            Change Theme
-          </li>
-          <li className="px-3 py-2 rounded sidebar-item" role="button" onClick={() => setAddTau(prev => !prev)}>
-            Add Tau
-          </li>
-        </ul>
-      </nav>
+      {isOpen && (
+        <nav className="mt-3">
+          <ul className="list-unstyled px-2">
+            <li
+              onClick={getRequest}
+              className="px-3 py-2 rounded sidebar-item"
+              role="button"
+            >
+              Test Connection
+            </li>
+            <li
+              className="px-3 py-2 rounded sidebar-item"
+              role="button"
+              onClick={toggleTheme}
+            >
+              Change Theme
+            </li>
+            <li
+              className="px-3 py-2 rounded sidebar-item"
+              role="button"
+              onClick={() => setAddTau((prev) => !prev)}
+            >
+              Add Tau
+            </li>
+          </ul>
+        </nav>
+      )}
     </aside>
   );
 };
