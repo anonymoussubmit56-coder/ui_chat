@@ -8,10 +8,11 @@ const ChatInput = ({
   setAttemps,
   alpha,
   tau,
+  setError,
+  error
 }) => {
   const [prompt, setPrompt] = useState("");
   const [waitingForResponse, setWaitingForResponse] = useState(false);
-  const [error, setError] = useState([]);
 
   const handleChange = (value) => {
     setPrompt(value);
@@ -49,12 +50,12 @@ const ChatInput = ({
       });
       const data = await response.json();
       modelResponse(data);
-    } catch (error) {
+    } catch (er) {
       setError((prev) => [
         ...prev,
-        { hasError: true, message: error.message, error: error },
+        { hasError: true, message: er.message },
       ]);
-      console.error("Error fetching data:", error);
+      console.error("Error fetching data:", er);
     } finally {
       setLoading(false);
       setWaitingForResponse(false);

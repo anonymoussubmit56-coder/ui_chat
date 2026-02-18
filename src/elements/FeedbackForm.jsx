@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Modal } from "bootstrap";
 import { connection } from "../data/connection";
 
-const FeedbackForm = ({ messages, value, setAttemps }) => {
+const FeedbackForm = ({ messages, value, setAttemps, error }) => {
   const modalRef = useRef(null);
   const modalInstance = useRef(null);
 
@@ -35,6 +35,7 @@ const FeedbackForm = ({ messages, value, setAttemps }) => {
 
     const feedbackData = {
       messages,
+      error,
       question1,
       question2,
       question3,

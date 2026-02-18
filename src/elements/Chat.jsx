@@ -8,6 +8,7 @@ const Chat = (theme ,alpha,tau) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [attemps,setAttemps] = useState(0);
+  const [error, setError] = useState([]);
 
   const handleSend = async (prompt) => {
     setMessages((prev) => [
@@ -25,7 +26,7 @@ const Chat = (theme ,alpha,tau) => {
 
   return (
     <div className="d-flex flex-column h-100">
-      <FeedbackForm messages={messages} setAttemps={setAttemps} value={attemps}/>
+      <FeedbackForm error={error} messages={messages} setAttemps={setAttemps} value={attemps}/>
 
       <ChatMessages  messages={messages} theme={theme} />
       {loading && (
@@ -39,7 +40,8 @@ const Chat = (theme ,alpha,tau) => {
         onSend={handleSend}
         modelResponse={modelResponse}
         setAttemps={setAttemps}
-
+        setError={setError}
+        error={error}
         alpha={alpha}
         tau={tau}
       />
