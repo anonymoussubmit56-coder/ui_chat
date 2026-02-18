@@ -1,7 +1,16 @@
-const Sidebar = ({ toggleTheme, theme, setAddTau, isOpen, setIsOpen }) => {
+import { connection } from "../data/connection";
+
+const Sidebar = ({
+  toggleTheme,
+  theme,
+  setAddTau,
+  isOpen,
+  setIsOpen,
+  testConnection,
+}) => {
   const getRequest = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/");
+      const response = await fetch(connection.url);
       const data = await response.json();
       console.log("Response from server:", data);
     } catch (error) {
@@ -30,7 +39,7 @@ const Sidebar = ({ toggleTheme, theme, setAddTau, isOpen, setIsOpen }) => {
           <img
             src="/img/menu-icon.png"
             alt="Menu icon"
-            className="w-100 h-100"
+            className="w-100 h-100 bg-light rounded p-1"
           />
         </span>
       </button>
@@ -46,13 +55,16 @@ const Sidebar = ({ toggleTheme, theme, setAddTau, isOpen, setIsOpen }) => {
       {isOpen && (
         <nav className="mt-3">
           <ul className="list-unstyled px-2">
-            <li
-              onClick={getRequest}
-              className="px-3 py-2 rounded sidebar-item"
-              role="button"
-            >
-              Test Connection
-            </li>
+            {testConnection && (
+              <li
+                onClick={getRequest}
+                className="px-3 py-2 rounded sidebar-item"
+                role="button"
+              >
+                Test Connection
+              </li>
+            )}
+
             <li
               className="px-3 py-2 rounded sidebar-item"
               role="button"

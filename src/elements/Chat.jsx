@@ -25,7 +25,7 @@ const Chat = (theme ,alpha,tau) => {
 
   return (
     <div className="d-flex flex-column h-100">
-      <FeedbackForm setAttemps={setAttemps} value={attemps}/>
+      <FeedbackForm messages={messages} setAttemps={setAttemps} value={attemps}/>
 
       <ChatMessages  messages={messages} theme={theme} />
       {loading && (

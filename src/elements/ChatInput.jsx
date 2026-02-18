@@ -1,9 +1,17 @@
 import { useState } from "react";
+import { connection } from "../data/connection";
 
-const ChatInput = ({ onSend, modelResponse, setLoading, setAttemps, alpha,tau }) => {
+const ChatInput = ({
+  onSend,
+  modelResponse,
+  setLoading,
+  setAttemps,
+  alpha,
+  tau,
+}) => {
   const [prompt, setPrompt] = useState("");
   const [waitingForResponse, setWaitingForResponse] = useState(false);
-
+  const [error, setError] = useState([]);
 
   const handleChange = (value) => {
     setPrompt(value);
@@ -29,47 +37,62 @@ const ChatInput = ({ onSend, modelResponse, setLoading, setAttemps, alpha,tau })
     const request = {
       question: prompt,
       alpha: alpha,
-      tau: tau
+      tau: tau,
     };
 
     setLoading(true);
     try {
-      const response = await fetch("http://127.0.0.1:8000/ask", {
+      const response = await fetch(connection.url + "ask", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: connection.header,
         body: JSON.stringify(request),
       });
       const data = await response.json();
       modelResponse(data);
     } catch (error) {
+      setError((prev) => [
+        ...prev,
+        { hasError: true, message: error.message, error: error },
+      ]);
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
       setWaitingForResponse(false);
-      setAttemps(prev => prev + 1);
+      setAttemps((prev) => prev + 1);
     }
   };
 
   return (
-    <div className="border rounded-3 p-2 d-flex align-items-center gap-2 bg-white">
-      <textarea
-        className="form-control border-0 shadow-none resize-none"
-        rows={1}
-        value={prompt}
-        disabled={waitingForResponse}
-        placeholder="Write your question..."
-        onChange={(e) => handleChange(e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
+    <>
+      {error.length > 0 && error[error.length - 1].hasError && (
+        <div className="alert alert-danger" role="alert">
+          {error[error.length - 1].message}
+          <br /> <br />
+          <span className="bg-light border border-secondary rounded-2 p-1 mt-2">
+            Attempts: {error.length}
+          </span>
+        </div>
+      )}
+      <div className="border rounded-3 p-2 d-flex align-items-center gap-2 bg-white">
+        <textarea
+          className="form-control border-0 shadow-none resize-none"
+          rows={1}
+          value={prompt}
+          disabled={waitingForResponse}
+          placeholder="Write your question..."
+          onChange={(e) => handleChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
 
-      <button
-        className="btn btn-dark d-flex align-items-center justify-content-center"
-        onClick={handleClick}
-        disabled={waitingForResponse}
-      >
-        ➤
-      </button>
-    </div>
+        <button
+          className="btn btn-dark d-flex align-items-center justify-content-center"
+          onClick={handleClick}
+          disabled={waitingForResponse}
+        >
+          ➤
+        </button>
+      </div>
+    </>
   );
 };
 
